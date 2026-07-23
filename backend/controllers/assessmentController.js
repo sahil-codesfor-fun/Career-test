@@ -29,53 +29,57 @@ exports.getQuestions = async (req, res) => {
 
 const fs = require('fs');
 const path = require('path');
-const { PDFDocument, rgb } = require('pdf-lib');
-const PDFKitDocument = require('pdfkit');
+const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 
-function getCourseRecommendations(testType) {
+function getRecommendedCourses(testType) {
   switch (testType) {
     case 'Non-Medical':
     case 'Engineering':
       return [
-        'B.Tech (CSE, AI & ML, Data Science, Cyber Security, Quantum Computing, Electronics & Comm, Mechanical EV, Civil, AI & Robotics, Block Chain, IoT)',
-        'BCA (General, AI & ML, Data Science, Cyber Security)',
-        'Pharmacy',
-        'BSc Agriculture',
-        'B.Sc (Multimedia, Graphics & Web Designing)',
+        'B.Tech (CSE, AI & ML, Data Science)',
+        'BCA (General, Cyber Security)',
         'B.Architecture',
         'B.Design',
         'BBA AI',
-        'BBA Data Science',
-        'BSc Mathematics',
-        'BSc Statistics'
+        'BSc Mathematics'
       ];
     case 'Medical':
       return [
-        'MBBS', 'BDS', 'BPT', 'Forensics Sciences', 'Nutrition & Dietetics',
-        'Agriculture', 'Pharmacy', 'Food technology', 'Nursing', 'MLT',
-        'AT & OT', 'Radio Imaging Technology', 'BSc Microbiology',
-        'BCA Hons AI', 'BBA Hons'
+        'MBBS & BDS',
+        'BPT & Nursing',
+        'Pharmacy',
+        'Nutrition & Dietetics',
+        'Agriculture',
+        'Forensics Sciences'
       ];
     case 'Commerce':
       return [
-        'BBA LLB',
-        'BBA Hons (General, Digital Marketing, Business Analytics, International Accounting ACCA, HR, Import Export Management)',
-        'BCom Hons', 'BCom Hons International Accounting', 'BCom Auditing and Taxation',
-        'BA LLB', 'Hotel Management', 'Multimedia & Web Design', 'BBA with AI',
-        'Event Management', 'Fashion Design', 'Communication Design',
-        'BBA travel & Tourism', 'Interior & furniture Design'
+        'BBA Hons (Digital Marketing, HR)',
+        'BCom Hons International Accounting',
+        'BA/BBA LLB',
+        'Hotel Management',
+        'Event Management',
+        'Business Analytics'
       ];
     case 'Humanities':
     case 'Arts':
       return [
-        'BA LLB', 'Psychology', 'Economics', 'Political Science', 'English',
-        'Hotel Management', 'BCA Hons AI', 'BBA Hons Digital Marketing',
-        'Fashion Design', 'Travel & Tourism', 'Performing Arts', 'Fine Arts',
-        'TV & Film Production', 'Journalism & Mass Communication', 'Gaming',
-        'Multimedia & Graphic Design'
+        'BA LLB',
+        'Psychology',
+        'Economics',
+        'Journalism & Mass Communication',
+        'Fashion Design',
+        'Fine Arts & Performing Arts'
       ];
     default:
-      return [];
+      return [
+        'BCA (General, AI & ML)',
+        'BBA Hons',
+        'BCom Hons',
+        'BA LLB',
+        'Hotel Management',
+        'Multimedia & Graphic Design'
+      ];
   }
 }
 
@@ -91,140 +95,12 @@ exports.submitAssessment = async (req, res) => {
 
     // Step 1: The Brain (Calculation & Insights)
     const score = Math.floor(Math.random() * 41) + 60; // Dummy score between 60 and 100
-    const percentage = `${score}%`;
-
     const strengths = ["Analytical Thinking", "Problem Solving", "Adaptability"];
     const weaknesses = ["Time Management", "Public Speaking"];
     const nature = "You exhibit a balanced mix of creative and logical thinking, leaning towards structured environments.";
+    const courseRecommendations = getRecommendedCourses(testType).slice(0, 8);
 
-    const courseRecommendations = getCourseRecommendations(testType);
-
-    // Step 2: The Artist (Drawing the Dynamic Pages matching the template styling)
-    const pdfkitBuffer = await new Promise((resolve, reject) => {
-      // Presentation size (16:9 standard, e.g., 960x540)
-      const doc = new PDFKitDocument({ 
-        size: [960, 540], 
-        layout: 'landscape', 
-        margin: 0 
-      });
-      const buffers = [];
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => resolve(Buffer.concat(buffers)));
-      doc.on('error', reject);
-
-      const brandNavy = '#0B192C';
-      const brandOrange = '#F37021';
-      const cardBg = '#F8FAFC';
-      const white = '#FFFFFF';
-
-      const drawHeader = (title) => {
-        // Orange top strip
-        doc.rect(0, 0, 960, 10).fill(brandOrange);
-        // Header Banner
-        doc.rect(0, 10, 960, 70).fill(brandNavy);
-        doc.fillColor(white).font('Helvetica-Bold').fontSize(28).text(title, 50, 32, { width: 860, align: 'left' });
-        doc.fillColor(brandOrange).font('Helvetica-Bold').fontSize(16).text('GEETA UNIVERSITY', 50, 42, { width: 860, align: 'right' });
-      };
-
-      const drawFooter = () => {
-        doc.rect(0, 500, 960, 40).fill(brandNavy);
-        doc.fillColor(white).font('Helvetica').fontSize(12).text('Your Path to Excellence', 50, 515, { align: 'left' });
-        doc.fillColor(brandOrange).text('www.geetauniversity.edu.in', 50, 515, { align: 'right', width: 860 });
-      };
-
-      // --- PAGE 9 (Slide 9): The Reveal ---
-      doc.rect(0, 0, 960, 540).fill(white);
-      drawHeader('Personalized Career Assessment');
-
-      doc.fillColor(brandNavy).font('Helvetica-Bold').fontSize(40).text(`Welcome, ${studentName}`, 50, 140, { align: 'center', width: 860 });
-      doc.fillColor(brandOrange).font('Helvetica').fontSize(22).text('Here are the results of your assessment', 50, 195, { align: 'center', width: 860 });
-
-      // Score Badge Circle
-      doc.circle(480, 340, 80).fill(cardBg);
-      doc.circle(480, 340, 80).lineWidth(4).stroke(brandOrange);
-      doc.fillColor(brandNavy).font('Helvetica-Bold').fontSize(46).text(percentage, 400, 320, { width: 160, align: 'center' });
-      doc.fillColor(brandNavy).font('Helvetica').fontSize(16).text('Overall Fit', 400, 375, { width: 160, align: 'center' });
-
-      // Metric Blocks
-      doc.roundedRect(150, 290, 200, 100, 10).fill(cardBg).lineWidth(2).stroke(brandNavy);
-      doc.fillColor(brandOrange).font('Helvetica-Bold').fontSize(20).text('Profile Mapping', 160, 310, { width: 180, align: 'center' });
-      doc.fillColor(brandNavy).font('Helvetica').fontSize(18).text(testType, 160, 345, { width: 180, align: 'center' });
-
-      doc.roundedRect(610, 290, 200, 100, 10).fill(cardBg).lineWidth(2).stroke(brandNavy);
-      doc.fillColor(brandOrange).font('Helvetica-Bold').fontSize(20).text('Aptitude Rating', 620, 310, { width: 180, align: 'center' });
-      doc.fillColor(brandNavy).font('Helvetica').fontSize(18).text('Highly Recommended', 620, 345, { width: 180, align: 'center' });
-
-      drawFooter();
-
-      // --- PAGE 10 (Slide 10): Insights ---
-      doc.addPage();
-      doc.rect(0, 0, 960, 540).fill(white);
-      drawHeader('Psychological Insights');
-
-      // Strengths Card
-      doc.roundedRect(50, 110, 410, 220, 10).fill(cardBg).lineWidth(1).stroke(brandNavy);
-      doc.fillColor(brandNavy).font('Helvetica-Bold').fontSize(24).text('Key Strengths', 80, 130);
-      doc.moveTo(80, 165).lineTo(430, 165).lineWidth(2).stroke(brandOrange);
-      doc.font('Helvetica').fontSize(16);
-      let sy = 190;
-      strengths.forEach(s => {
-        doc.fillColor(brandOrange).text('•', 80, sy);
-        doc.fillColor(brandNavy).text(s, 100, sy);
-        sy += 30;
-      });
-
-      // Growth Card
-      doc.roundedRect(500, 110, 410, 220, 10).fill(cardBg).lineWidth(1).stroke(brandNavy);
-      doc.fillColor(brandNavy).font('Helvetica-Bold').fontSize(24).text('Areas for Growth', 530, 130);
-      doc.moveTo(530, 165).lineTo(880, 165).lineWidth(2).stroke(brandOrange);
-      doc.font('Helvetica').fontSize(16);
-      let wy = 190;
-      weaknesses.forEach(w => {
-        doc.fillColor(brandOrange).text('•', 530, wy);
-        doc.fillColor(brandNavy).text(w, 550, wy);
-        wy += 30;
-      });
-
-      // Nature Card
-      doc.roundedRect(50, 350, 860, 120, 10).fill(cardBg).lineWidth(1).stroke(brandNavy);
-      doc.fillColor(brandNavy).font('Helvetica-Bold').fontSize(24).text('Your Nature', 80, 370);
-      doc.moveTo(80, 405).lineTo(880, 405).lineWidth(2).stroke(brandOrange);
-      doc.fillColor(brandNavy).font('Helvetica').fontSize(18).text(nature, 80, 425, { width: 800, align: 'left', lineGap: 5 });
-
-      drawFooter();
-
-      // --- PAGE 11 (Slide 11): Courses ---
-      doc.addPage();
-      doc.rect(0, 0, 960, 540).fill(white);
-      drawHeader('Recommended Pathways');
-
-      doc.fillColor(brandNavy).font('Helvetica').fontSize(22).text(`Top Courses matching your `, 50, 110, { continued: true });
-      doc.fillColor(brandOrange).font('Helvetica-Bold').text(testType).font('Helvetica').fillColor(brandNavy).text(' profile:', { continued: false });
-
-      // Grid for courses
-      let cx = 50;
-      let cy = 160;
-      const colWidth = 415;
-
-      courseRecommendations.forEach((course, i) => {
-        doc.roundedRect(cx, cy, colWidth, 45, 8).fill(cardBg).lineWidth(1).stroke(brandOrange);
-        doc.fillColor(brandNavy).font('Helvetica-Bold').fontSize(14).text(course, cx + 15, cy + 15, { width: colWidth - 30, height: 20, lineBreak: false });
-
-        cy += 60;
-        if (cy > 400) {
-          cy = 160;
-          cx += 445; // move to second column
-        }
-      });
-
-      // CTA Footer (instead of standard footer)
-      doc.rect(0, 480, 960, 60).fill(brandOrange);
-      doc.fillColor(white).font('Helvetica-Bold').fontSize(24).text('Contact Geeta University Counselors Today to Shape Your Future!', 0, 498, { align: 'center', width: 960 });
-
-      doc.end();
-    });
-
-    // Step 3: The Merger (Appending pages as requested)
+    // Step 2: Template Loading & Dimensions Extraction
     let templatePath = null;
     const specificTemplatePath = path.join(__dirname, '..', 'templates', 'Geeta university Presentation.pdf');
     const specificUploadsPath = path.join(__dirname, '..', 'uploads', 'Geeta university Presentation template.pdf');
@@ -250,30 +126,134 @@ exports.submitAssessment = async (req, res) => {
       }
     }
 
-    let finalPdfBytes;
+    let mainDoc;
+    let width = 960;
+    let height = 540;
+
     if (templatePath && fs.existsSync(templatePath)) {
       const templateBytes = await fs.promises.readFile(templatePath);
-
-      const mainDoc = await PDFDocument.load(templateBytes);
-      const resultDoc = await PDFDocument.load(pdfkitBuffer);
-
-      const copiedPages = await mainDoc.copyPages(resultDoc, resultDoc.getPageIndices());
-
-      copiedPages.forEach((page) => {
-        mainDoc.addPage(page);
-      });
-
-      finalPdfBytes = await mainDoc.save();
+      mainDoc = await PDFDocument.load(templateBytes);
+      const pages = mainDoc.getPages();
+      if (pages.length > 0) {
+        const size = pages[0].getSize();
+        width = size.width;
+        height = size.height;
+      }
     } else {
-      console.warn("Template missing, returning dynamic pages only");
-      finalPdfBytes = pdfkitBuffer;
+      mainDoc = await PDFDocument.create();
     }
 
-    // Step 4: The Delivery
+    // Step 3: Append 3 completely blank pages with exact extracted dimensions
+    const page1 = mainDoc.addPage([width, height]);
+    const page2 = mainDoc.addPage([width, height]);
+    const page3 = mainDoc.addPage([width, height]);
+
+    // Step 4: The Artist (pdf-lib drawing primitives)
+    const helvetica = await mainDoc.embedFont(StandardFonts.Helvetica);
+    const helveticaBold = await mainDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const brandNavy = rgb(0.04, 0.10, 0.17);
+    const brandOrange = rgb(0.95, 0.44, 0.13);
+    const lightSlate = rgb(0.97, 0.98, 0.99);
+    const subtleBorders = rgb(0.88, 0.91, 0.94);
+    const white = rgb(1, 1, 1);
+
+    const drawHeader = (page, title) => {
+      page.drawRectangle({ x: 0, y: height - 80, width, height: 80, color: brandNavy });
+      page.drawRectangle({ x: 0, y: height - 85, width, height: 5, color: brandOrange });
+      page.drawText(title, { x: 50, y: height - 50, font: helveticaBold, size: 28, color: white });
+    };
+
+    // --- PAGE 1 (Slide 9): Executive Summary & Visual Score ---
+    drawHeader(page1, "Personalized Career Assessment");
+
+    const welcomeText = `Welcome, ${studentName}`;
+    const welcomeWidth = helveticaBold.widthOfTextAtSize(welcomeText, 40);
+    page1.drawText(welcomeText, { x: (width - welcomeWidth) / 2, y: height - 160, font: helveticaBold, size: 40, color: brandNavy });
+
+    // Visual Chart (Progress Bar)
+    const barWidth = 300;
+    const barHeight = 24;
+    const barX = (width - barWidth) / 2;
+    const barY = height / 2 - 50;
+
+    page1.drawRectangle({ x: barX, y: barY, width: barWidth, height: barHeight, color: subtleBorders });
+    page1.drawRectangle({ x: barX, y: barY, width: barWidth * (score / 100), height: barHeight, color: brandOrange });
+    page1.drawText(`${score}%`, { x: barX + barWidth + 15, y: barY + 4, font: helveticaBold, size: 18, color: brandNavy });
+
+    // --- PAGE 2 (Slide 10): Psychological Insights & Profile Analysis ---
+    drawHeader(page2, "Psychological Insights & Profile Analysis");
+
+    const cardYTop = height - 140;
+    const cardWidth = (width - 150) / 2;
+    const cardHeight = 180;
+    const card1X = 50;
+    const card2X = 50 + cardWidth + 50;
+    const cardYBottom = cardYTop - cardHeight;
+
+    // Card 1 (Key Strengths)
+    page2.drawRectangle({ x: card1X, y: cardYBottom, width: cardWidth, height: cardHeight, color: lightSlate, borderColor: subtleBorders, borderWidth: 1 });
+    page2.drawText("Key Strengths", { x: card1X + 20, y: cardYBottom + cardHeight - 40, font: helveticaBold, size: 20, color: brandNavy });
+    let sy = cardYBottom + cardHeight - 75;
+    strengths.forEach(s => {
+      page2.drawRectangle({ x: card1X + 20, y: sy + 4, width: 6, height: 6, color: brandOrange });
+      page2.drawText(s, { x: card1X + 35, y: sy, font: helvetica, size: 14, color: brandNavy });
+      sy -= 25;
+    });
+
+    // Card 2 (Areas for Growth)
+    page2.drawRectangle({ x: card2X, y: cardYBottom, width: cardWidth, height: cardHeight, color: lightSlate, borderColor: subtleBorders, borderWidth: 1 });
+    page2.drawText("Areas for Growth", { x: card2X + 20, y: cardYBottom + cardHeight - 40, font: helveticaBold, size: 20, color: brandNavy });
+    let wy = cardYBottom + cardHeight - 75;
+    weaknesses.forEach(w => {
+      page2.drawRectangle({ x: card2X + 20, y: wy + 4, width: 6, height: 6, color: brandOrange });
+      page2.drawText(w, { x: card2X + 35, y: wy, font: helvetica, size: 14, color: brandNavy });
+      wy -= 25;
+    });
+
+    // Card 3 (Your Nature)
+    const card3Y = cardYBottom - 30;
+    const card3Height = 100;
+    const card3YBottom = card3Y - card3Height;
+    page2.drawRectangle({ x: 50, y: card3YBottom, width: width - 100, height: card3Height, color: lightSlate, borderColor: subtleBorders, borderWidth: 1 });
+    page2.drawText("Your Nature", { x: 70, y: card3YBottom + card3Height - 35, font: helveticaBold, size: 20, color: brandNavy });
+    page2.drawText(nature, { x: 70, y: card3YBottom + card3Height - 65, font: helvetica, size: 14, color: brandNavy });
+
+    // --- PAGE 3 (Slide 11): Tailored Academic Roadmap ---
+    drawHeader(page3, "Tailored Academic Roadmap");
+
+    const startY = height - 160;
+    const colWidth = (width - 150) / 2;
+    const leftCol = 50;
+    const rightCol = 50 + colWidth + 50;
+    const rowHeight = 45;
+    const rowSpacing = 15;
+
+    for (let i = 0; i < courseRecommendations.length; i++) {
+      const isLeft = i % 2 === 0;
+      const colIndex = Math.floor(i / 2);
+      const x = isLeft ? leftCol : rightCol;
+      const y = startY - (colIndex * (rowHeight + rowSpacing));
+
+      page3.drawRectangle({ x, y, width: colWidth, height: rowHeight, color: lightSlate, borderColor: subtleBorders, borderWidth: 1 });
+      page3.drawRectangle({ x: x + 15, y: y + (rowHeight / 2) - 3, width: 6, height: 6, color: brandOrange });
+
+      const cName = courseRecommendations[i];
+      page3.drawText(cName.length > 55 ? cName.substring(0, 52) + "..." : cName, { x: x + 30, y: y + (rowHeight / 2) - 4, font: helveticaBold, size: 12, color: brandNavy });
+    }
+
+    // Footer
+    const footerHeight = 50;
+    page3.drawRectangle({ x: 0, y: 0, width, height: footerHeight, color: brandNavy });
+    const footerText = "Contact Geeta University Counselors Today to Shape Your Future! | +91 92787 68000";
+    const footerWidth = helveticaBold.widthOfTextAtSize(footerText, 16);
+    page3.drawText(footerText, { x: (width - footerWidth) / 2, y: 18, font: helveticaBold, size: 16, color: white });
+
+    // Step 5: The Delivery
+    const finalPdfBytes = await mainDoc.save();
     const safeName = studentName.replace(/\s+/g, '_');
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${safeName}_Geeta_University_Result.pdf"`);
-
     return res.send(Buffer.from(finalPdfBytes));
 
   } catch (error) {
