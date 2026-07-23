@@ -174,9 +174,9 @@ const AddTest = () => {
             <button 
               type="submit" 
               disabled={loading}
-              className={`w-full font-bold py-3 px-4 rounded transition-colors ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-brand-orange hover:bg-orange-600 text-white'}`}
+              className={`w-full font-bold py-3 px-4 rounded transition-colors ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-brand-orange hover:bg-brand-orange/90 text-white'}`}
             >
-              {loading ? 'Creating...' : 'Create Test'}
+              {loading ? 'Creating Test...' : 'Create Test'}
             </button>
           </div>
         </form>

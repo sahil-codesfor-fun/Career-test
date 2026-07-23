@@ -78,7 +78,7 @@ const ContactForm = () => {
           <input required type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Enter Address *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
 
           <div className="pt-4 flex justify-center">
-            <button type="submit" className="w-full md:w-1/3 bg-brand-orange hover:bg-orange-600 text-white font-bold py-3 px-8 rounded transition-colors uppercase tracking-wider">
+            <button type="submit" className="w-full md:w-1/3 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold py-3 px-8 rounded transition-colors uppercase tracking-wider">
               Submit
             </button>
           </div>

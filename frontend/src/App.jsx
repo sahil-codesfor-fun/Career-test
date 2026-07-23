@@ -8,6 +8,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import Users from './pages/admin/Users';
 import AddTest from './pages/admin/AddTest';
 import LiveTests from './pages/admin/LiveTests';
+import CounsellingRequests from './pages/admin/CounsellingRequests';
 
 function App() {
   return (
@@ -15,9 +16,10 @@ function App() {
       <div className="min-h-screen flex flex-col">
         <Routes>
           {/* Admin Routes without Navbar */}
-          <Route path="/adminportal" element={<AdminLogin />} />
-          <Route path="/adminportal/*" element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/*" element={<AdminLayout />}>
             <Route path="users" element={<Users />} />
+            <Route path="counselling" element={<CounsellingRequests />} />
             <Route path="add-test" element={<AddTest />} />
             <Route path="live-tests" element={<LiveTests />} />
           </Route>

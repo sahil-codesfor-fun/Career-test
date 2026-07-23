@@ -6,31 +6,32 @@ const AdminLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const isAdmin = localStorage.getItem('isAdmin');
-    if (!isAdmin) {
-      navigate('/adminportal');
+    const isAuth = localStorage.getItem('isAdminAuth');
+    if (!isAuth) {
+      navigate('/admin');
     }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('isAdmin');
-    navigate('/adminportal');
+    localStorage.removeItem('isAdminAuth');
+    navigate('/admin');
   };
 
   const menuItems = [
-    { path: '/adminportal/users', label: 'Users' },
-    { path: '/adminportal/add-test', label: 'Add Test' },
-    { path: '/adminportal/live-tests', label: 'Live Tests' }
+    { path: '/admin/users', label: 'Users' },
+    { path: '/admin/counselling', label: 'Counselling Requests' },
+    { path: '/admin/add-test', label: 'Add Test' },
+    { path: '/admin/live-tests', label: 'Live Tests' }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="h-screen w-full flex overflow-hidden bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-brand-blue text-white shadow-lg">
+      <aside className="w-64 bg-brand-blue text-white shadow-lg flex flex-col">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-brand-orange">Admin Panel</h2>
         </div>
-        <nav className="mt-6">
+        <nav className="mt-6 flex-1 overflow-y-auto">
           {menuItems.map((item) => (
             <Link
               key={item.path}
@@ -45,10 +46,10 @@ const AdminLayout = () => {
             </Link>
           ))}
         </nav>
-        <div className="absolute bottom-0 w-64 p-4 border-t border-blue-900">
+        <div className="mt-auto p-4 border-t border-blue-900">
           <button 
             onClick={handleLogout}
-            className="w-full text-left px-2 py-2 text-gray-300 hover:text-white transition-colors"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition-colors shadow-sm"
           >
             Log Out
           </button>
@@ -56,7 +57,7 @@ const AdminLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-8 overflow-y-auto h-full">
         <Outlet />
       </main>
     </div>

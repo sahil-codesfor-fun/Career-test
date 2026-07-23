@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email === 'admin@gmail.com' && password === 'Geeta@123') {
-      localStorage.setItem('isAdmin', 'true');
-      navigate('/adminportal/users');
-    } else {
-      alert('Invalid credentials');
-    }
+    setIsSubmitting(true);
+    
+    // Simulate 1 second loading time
+    setTimeout(() => {
+      if (email === 'admin@gmail.com' && password === 'Geeta@123') {
+        localStorage.setItem('isAdminAuth', 'true');
+        navigate('/admin/users');
+      } else {
+        alert('Invalid credentials');
+        setIsSubmitting(false);
+      }
+    }, 1000);
   };
 
   return (
@@ -32,7 +40,8 @@ const AdminLogin = () => {
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" 
+              disabled={isSubmitting}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-brand-orange disabled:opacity-50" 
             />
           </div>
           <div>
@@ -43,12 +52,14 @@ const AdminLogin = () => {
                 type={showPassword ? "text" : "password"} 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-brand-orange pr-10" 
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-brand-orange pr-10 disabled:opacity-50" 
               />
               <button 
                 type="button" 
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+                disabled={isSubmitting}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none disabled:opacity-50"
               >
                 {showPassword ? (
                   <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,8 +76,16 @@ const AdminLogin = () => {
           </div>
           
           <div className="pt-4">
-            <button type="submit" className="w-full bg-brand-blue hover:bg-blue-900 text-white font-bold py-2 px-4 rounded transition-colors">
-              Login
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full flex items-center justify-center gap-2 bg-brand-blue hover:bg-blue-900 text-white font-bold py-2 px-4 rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed h-[40px]"
+            >
+              {isSubmitting ? (
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>

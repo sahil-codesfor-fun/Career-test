@@ -223,7 +223,7 @@ const LiveTests = () => {
                 
                 <div className="flex flex-wrap items-center gap-4 border-t border-gray-100 pt-4 mt-4">
                   <div className="flex items-center text-sm text-gray-600">
-                    <label className="relative cursor-pointer bg-brand-orange text-white px-3 py-1.5 rounded-md font-medium hover:bg-orange-600 transition-colors">
+                    <label className="relative cursor-pointer bg-brand-orange text-white px-3 py-1.5 rounded-md font-medium hover:bg-brand-orange/90 transition-colors">
                       <span>+ Overwrite Questions (CSV/Excel)</span>
                       <input 
                         type="file" 
