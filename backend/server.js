@@ -16,10 +16,12 @@ app.use(express.json());
 const adminRoutes = require('./routes/adminRoutes');
 const assessmentRoutes = require('./routes/assessmentRoutes');
 const counsellingRoutes = require('./routes/counsellingRoutes');
+const otpRoutes = require('./routes/otpRoutes');
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/assessments', assessmentRoutes);
 app.use('/api/counselling', counsellingRoutes);
+app.use('/api/otp', otpRoutes);
 
 app.get('/api/health', async (req, res) => {
   try {
