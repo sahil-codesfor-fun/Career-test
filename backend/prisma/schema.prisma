@@ -56,3 +56,11 @@ model Result {
   outcome   String
   createdAt DateTime @default(now())
 }
+
+model CounsellingRequest {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  mobile    String
+  createdAt DateTime @default(now())
+}

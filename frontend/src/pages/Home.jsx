@@ -233,7 +233,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{engineeringTest?.title || 'Engineering'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {engineeringTest?.description || "This test is not added yet, please come back later."}
+                    {engineeringTest ? (engineeringTest.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {engineeringTest ? (
                     <button
@@ -261,7 +261,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{medicalTest?.title || 'Medical & Life Sciences'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {medicalTest?.description || "This test is not added yet, please come back later."}
+                    {medicalTest ? (medicalTest.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {medicalTest ? (
                     <button
@@ -289,7 +289,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{humanitiesTest?.title || 'Humanities'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {humanitiesTest?.description || "This test is not added yet, please come back later."}
+                    {humanitiesTest ? (humanitiesTest.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {humanitiesTest ? (
                     <button
@@ -317,7 +317,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{commerceTest?.title || 'Commerce'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {commerceTest?.description || "This test is not added yet, please come back later."}
+                    {commerceTest ? (commerceTest.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {commerceTest ? (
                     <button
@@ -362,7 +362,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-lg font-bold text-gray-800 mb-2">{class1112Test?.title || '10+1 / 10+2'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {class1112Test?.description || "This test is not added yet, please come back later."}
+                    {class1112Test ? (class1112Test.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {class1112Test ? (
                     <button
@@ -390,7 +390,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-lg font-bold text-gray-800 mb-2">{diplomaTest?.title || 'Diploma Courses'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {diplomaTest?.description || "This test is not added yet, please come back later."}
+                    {diplomaTest ? (diplomaTest.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {diplomaTest ? (
                     <button
@@ -428,7 +428,7 @@ const Home = () => {
                 <div className="flex flex-col items-start">
                   <h3 className="text-lg font-bold text-gray-800 mb-2">{class110Test?.title || 'Class 1st - 10th'}</h3>
                   <p className="text-gray-500 text-sm mb-4 min-h-[40px]">
-                    {class110Test?.description || "This test is not added yet, please come back later."}
+                    {class110Test ? (class110Test.description || "Take this assessment to discover your strengths and the best career paths for you.") : "This test is not added yet, please come back later."}
                   </p>
                   {class110Test ? (
                     <button

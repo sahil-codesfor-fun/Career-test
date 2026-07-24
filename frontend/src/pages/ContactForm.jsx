@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const ContactForm = () => {
@@ -19,6 +19,49 @@ const ContactForm = () => {
     motherName: '',
     address: ''
   });
+
+  const [indiaData, setIndiaData] = useState([]);
+  const [availableDistricts, setAvailableDistricts] = useState([]);
+
+  // Common Haryana Schools (for autocomplete)
+  const popularSchools = [
+    "Geeta University",
+    "Geeta Engineering College",
+    "Delhi Public School, Panipat",
+    "DAV Public School",
+    "Kendriya Vidyalaya",
+    "St. Mary's Convent School",
+    "Arya Bal Shiksha Mandir",
+    "Bal Vikas School"
+  ];
+
+  useEffect(() => {
+    // Fetch Indian States and Districts
+    fetch('https://raw.githubusercontent.com/sab99r/Indian-States-And-Districts/master/states-and-districts.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.states) {
+          setIndiaData(data.states);
+        }
+      })
+      .catch(err => console.error("Error fetching location data:", err));
+  }, []);
+
+  // Update available districts when state changes
+  useEffect(() => {
+    if (formData.state) {
+      const stateObj = indiaData.find(s => s.state === formData.state);
+      if (stateObj && stateObj.districts) {
+        setAvailableDistricts(stateObj.districts);
+      } else {
+        setAvailableDistricts([]);
+      }
+      // Reset district and city if the state changed
+      setFormData(prev => ({ ...prev, district: '', city: '' }));
+    } else {
+      setAvailableDistricts([]);
+    }
+  }, [formData.state, indiaData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,22 +95,41 @@ const ContactForm = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <select required name="gender" value={formData.gender} onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange text-gray-600">
-              <option value="">Select Gender *</option>
+            <select required name="gender" value={formData.gender} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange ${!formData.gender ? 'text-gray-400' : 'text-gray-900'}`}>
+              <option value="" disabled hidden>Select Gender *</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
-            <input required type="text" name="state" value={formData.state} onChange={handleChange} placeholder="Select School State *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
+            
+            <select required name="state" value={formData.state} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange ${!formData.state ? 'text-gray-400' : 'text-gray-900'}`}>
+              <option value="" disabled hidden>Select School State *</option>
+              {indiaData.map((stateObj, idx) => (
+                <option key={idx} value={stateObj.state}>{stateObj.state}</option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input required type="text" name="district" value={formData.district} onChange={handleChange} placeholder="Select School District *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
-            <input required type="text" name="city" value={formData.city} onChange={handleChange} placeholder="Select School City *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
+            <select required name="district" value={formData.district} onChange={handleChange} disabled={!formData.state} className={`w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange ${!formData.district ? 'text-gray-400' : 'text-gray-900'} ${!formData.state ? 'bg-gray-100 cursor-not-allowed' : ''}`}>
+              <option value="" disabled hidden>Select School District *</option>
+              {availableDistricts.map((district, idx) => (
+                <option key={idx} value={district}>{district}</option>
+              ))}
+            </select>
+
+            <input required type="text" name="city" value={formData.city} onChange={handleChange} placeholder="Enter School City/Town *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input required type="text" name="school" value={formData.school} onChange={handleChange} placeholder="Select School Name *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
-            <input required type="date" name="dob" value={formData.dob} onChange={handleChange} className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange text-gray-600" />
+            <div className="relative">
+              <input required type="text" name="school" list="school-list" value={formData.school} onChange={handleChange} placeholder="Select or Type School Name *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
+              <datalist id="school-list">
+                {popularSchools.map((school, idx) => (
+                  <option key={idx} value={school} />
+                ))}
+              </datalist>
+            </div>
+            <input required type="date" name="dob" value={formData.dob} onChange={handleChange} className={`w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange ${!formData.dob ? 'text-gray-400' : 'text-gray-900'}`} />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -75,7 +137,7 @@ const ContactForm = () => {
             <input required type="text" name="motherName" value={formData.motherName} onChange={handleChange} placeholder="Enter Mother Name *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
           </div>
 
-          <input required type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Enter Address *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
+          <input required type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Enter Full Address *" className="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-brand-orange" />
 
           <div className="pt-4 flex justify-center">
             <button type="submit" className="w-full md:w-1/3 bg-brand-orange hover:bg-brand-orange/90 text-white font-bold py-3 px-8 rounded transition-colors uppercase tracking-wider">
