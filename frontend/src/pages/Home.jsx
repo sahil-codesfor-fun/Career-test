@@ -495,7 +495,7 @@ const Home = () => {
                   <div className="flex items-start text-left mt-2.5 mb-3">
                     <input type="checkbox" id="authorize" className="mt-0.5 mr-2 rounded border-gray-300 w-3 h-3 flex-shrink-0" required />
                     <label htmlFor="authorize" className="text-white text-[10.5px] leading-tight opacity-90">
-                      I authorize Lovely Professional University to contact me with updates and notifications via Email, SMS, WhatsApp & Call. Overrides DND/NDNC.
+                      I authorize Geeta University to contact me with updates and notifications via Email, SMS, WhatsApp & Call. Overrides DND/NDNC.
                     </label>
                   </div>
 
