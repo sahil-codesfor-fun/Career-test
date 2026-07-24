@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const ContactForm = () => {
   const navigate = useNavigate();
@@ -85,14 +86,12 @@ const ContactForm = () => {
 
     setOtpLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/otp/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile: formData.mobile })
+      const response = await axios.post('http://localhost:3000/api/otp/send', {
+        mobile: formData.mobile
       });
-      const data = await response.json();
+      const data = response.data;
       
-      if (response.ok) {
+      if (data.success) {
         setOtpSent(true);
         setOtpSuccess(data.message);
         
@@ -123,14 +122,13 @@ const ContactForm = () => {
 
     setOtpLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/otp/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mobile: formData.mobile, otp: otpInput })
+      const response = await axios.post('http://localhost:3000/api/otp/verify', {
+        mobile: formData.mobile,
+        otp: otpInput
       });
-      const data = await response.json();
+      const data = response.data;
       
-      if (response.ok) {
+      if (data.success) {
         setOtpVerified(true);
         setOtpSuccess('Mobile number verified successfully!');
       } else {
