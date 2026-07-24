@@ -78,7 +78,7 @@ const AddTest = () => {
     setLoading(true);
     try {
       // 1. Create the test
-      const testRes = await axios.post('http://localhost:3000/api/admin/tests', {
+      const testRes = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/tests`, {
         title,
         description,
         questions: parsedQuestions
@@ -89,7 +89,7 @@ const AddTest = () => {
         const testId = testRes.data.id;
         const formData = new FormData();
         formData.append('pdfTemplate', pdfFile);
-        await axios.post(`http://localhost:3000/api/admin/tests/${testId}/template`, formData, {
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/tests/${testId}/template`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }

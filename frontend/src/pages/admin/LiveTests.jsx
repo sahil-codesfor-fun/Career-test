@@ -21,7 +21,7 @@ const LiveTests = () => {
 
   const fetchTests = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/assessments/tests');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/assessments/tests`);
       setTests(res.data);
     } catch (error) {
       console.error('Failed to fetch tests', error);
@@ -75,7 +75,7 @@ const LiveTests = () => {
     }
 
     try {
-      await axios.post(`http://localhost:3000/api/admin/tests/${testId}/questions`, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/tests/${testId}/questions`, {
         questions: formatted
       });
       alert(`Successfully added and overwritten ${formatted.length} questions to the test!`);
@@ -89,7 +89,7 @@ const LiveTests = () => {
   const handleDeleteTest = async (testId) => {
     if (window.confirm('Are you sure you want to completely delete this test and all its questions and results? This action cannot be undone.')) {
       try {
-        await axios.delete(`http://localhost:3000/api/admin/tests/${testId}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/tests/${testId}`);
         setTests(tests.filter(t => t.id !== testId));
         alert('Test deleted successfully.');
       } catch (error) {
@@ -107,7 +107,7 @@ const LiveTests = () => {
 
   const handleSaveEditTest = async (testId) => {
     try {
-      await axios.put(`http://localhost:3000/api/admin/tests/${testId}`, {
+      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/tests/${testId}`, {
         title: editTitle,
         description: editDescription
       });
@@ -130,7 +130,7 @@ const LiveTests = () => {
   const handleDeleteQuestion = async (testId, questionId) => {
     if (window.confirm('Delete this question?')) {
       try {
-        await axios.delete(`http://localhost:3000/api/admin/questions/${questionId}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/questions/${questionId}`);
         setTests(tests.map(t => {
           if (t.id === testId) {
             return { ...t, questions: t.questions.filter(q => q.id !== questionId) };
@@ -157,7 +157,7 @@ const LiveTests = () => {
     formData.append('pdfTemplate', file);
 
     try {
-      await axios.post(`http://localhost:3000/api/admin/tests/${testId}/template`, formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/tests/${testId}/template`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       alert('PDF Template uploaded successfully!');

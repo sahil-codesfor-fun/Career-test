@@ -86,7 +86,7 @@ const ContactForm = () => {
 
     setOtpLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/otp/send', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/otp/send`, {
         mobile: formData.mobile
       });
       const data = response.data;
@@ -122,7 +122,7 @@ const ContactForm = () => {
 
     setOtpLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/otp/verify', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/otp/verify`, {
         mobile: formData.mobile,
         otp: otpInput
       });

@@ -11,7 +11,7 @@ const CounsellingRequests = () => {
 
   const fetchRequests = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/counselling');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/counselling`);
       setRequests(res.data);
     } catch (error) {
       console.error('Failed to fetch counselling requests', error);

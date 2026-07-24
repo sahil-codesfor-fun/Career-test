@@ -19,7 +19,7 @@ const Quiz = () => {
   useEffect(() => {
     // In a real app, fetch questions from backend for this testId
     // For now, mock questions if API fails
-    axios.get(`http://localhost:3000/api/assessments/tests/${testId}/questions`)
+    axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/assessments/tests/${testId}/questions`)
       .then(res => {
         setQuestions(res.data);
         setLoading(false);
@@ -55,7 +55,7 @@ const Quiz = () => {
     const studentInfo = JSON.parse(localStorage.getItem('studentInfo') || '{}');
     
     try {
-      const response = await axios.post('http://localhost:3000/api/assessments/submit', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/assessments/submit`, {
         student: studentInfo,
         testId: parseInt(testId),
         answers: answers

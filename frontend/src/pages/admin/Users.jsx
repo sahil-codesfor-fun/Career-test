@@ -11,7 +11,7 @@ const Users = () => {
 
   const fetchSubmissions = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/admin/submissions');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/admin/submissions`);
       setSubmissions(res.data);
     } catch (error) {
       console.error('Failed to fetch submissions', error);

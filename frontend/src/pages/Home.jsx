@@ -16,7 +16,7 @@ const Home = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await axios.post('http://localhost:3000/api/counselling', counsellingForm);
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/counselling`, counsellingForm);
       setIsSubmitted(true);
       setCounsellingForm({ name: '', email: '', mobile: '' });
     } catch (error) {
@@ -39,7 +39,7 @@ const Home = () => {
       setIsPageLoading(false);
     }, 800);
 
-    axios.get('http://localhost:3000/api/assessments/tests')
+    axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/assessments/tests`)
       .then(res => setTests(res.data))
       .catch(err => console.error('Failed to fetch tests', err));
 
