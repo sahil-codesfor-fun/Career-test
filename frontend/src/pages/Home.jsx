@@ -79,7 +79,7 @@ const Home = () => {
           {/* Left Content */}
           <div className="w-full lg:w-1/2">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-orange-50 text-brand-orange font-medium text-sm mb-6 border border-orange-100">
-              <span className="text-brand-orange">✨</span> AI-Powered Career Assessment
+              <span className="text-brand-orange"> </span> AI-Powered Career Assessment
             </div>
             <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-[1.1] mb-6 tracking-tight">
               Discover Your <br /> Perfect <span className="text-brand-orange">Career Path</span>
